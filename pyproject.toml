@@ -1,0 +1,22 @@
+[project]
+name = "cyp"
+version = "0.1.0"
+description = "Cytochrome P450 inhibitor classification (M.S. thesis code)"
+requires-python = ">=3.11"
+dependencies = [
+    "numpy",
+    "pandas",
+    "scikit-learn",
+    "matplotlib",
+]
+
+[dependency-groups]
+dev = [
+    "nbconvert",
+    "nbformat",
+    "ipykernel",
+    "ruff",
+]
+
+[tool.uv]
+package = false

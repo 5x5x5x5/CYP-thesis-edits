@@ -9,3 +9,6 @@
 .dvi
 *.bbl
 *.blg
+.venv/
+__pycache__/
+notebooks/data/
