@@ -35,7 +35,7 @@ PC & Total          & Active          & Inactive \\ \hline
 \end{minipage}
 \end{table}
 
-Cytochrome P450 isozyme 1A2 models were trained on 4820 actives and 4780 inactives in the training set, and validated against 529 actives and 580 inactives in the test set. All models are considered good models when the total accuracy is above 0.6. The test set results represent compounds unseen by the model. Validating these models against the test set does not produce wildly divergent accuracy scores, indicating that overfitting is unlikely. 
+Cytochrome P450 isozyme 1A2 models were trained on 4820 actives and 4780 inactives in the training set, and validated against 1180 actives and 1220 inactives in the test set. All models are considered good models when the total accuracy is above 0.6. The test set results represent compounds unseen by the model. Validating these models against the test set does not produce wildly divergent accuracy scores, indicating that overfitting is unlikely. 
 
 \begin{figure}[H]
 \includegraphics[width=1\textwidth]{../img/1a2_moe_model_accuracy.png}
@@ -88,7 +88,7 @@ Cytochrome P450 isozyme 2C9 models were trained on 3266 actives and 3327 inactiv
 
 \begin{figure}[H]
 \includegraphics[width=1\textwidth]{../img/2c9_moe_model_accuracy.png}
-\caption{2C19 MOE Model Accuracy}
+\caption{2C9 MOE Model Accuracy}
 \label{fig:2c9}
 \end{figure}
 
@@ -344,7 +344,7 @@ The comparison of model accuracy results on the CYP 3A4 isozyme dataset show tha
 \caption{Inhibitor Classification Method Comparison on the Training Set}
 \end{figure}
 
-Looking at the results for method comparison on the test set, it is clear that all methods performed similarly for each isozyme and well overall. It appears that the support vector machine classifier slightly outperforms all others in each case.
+On the training set, all methods performed similarly for each isozyme, and the support vector machine classifier had the highest accuracy in each case.
 
 \begin{figure}[H]
 \includegraphics[width=1\textwidth]{../img/method_comparison_test_set.png}

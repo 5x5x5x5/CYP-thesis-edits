@@ -9,7 +9,7 @@ The most recent technology developed for CYP inhibition is based on substrates t
 
 In the PubChem Assay 1851, compounds are classified as active or inactive inhibitors for each CYP with an activity cutoff set to AC50 = 10uM (AC50, “activity concentration 50”, refers to the concentration that is required to elicit half-maximal effect). However, in cases where the dose-response curve for a compound showed poor fit or the inhibition efficacy was below 60\%, the assay results were regarded as inconclusive. \cite{Veith2009}
 
-Compounds were characterized by their Activity Score and regarded as inhibitors if their activity score ranged between 40 and 100. An Acitivity Score is assigned based on AC50 value, which was combined with a confidence measure. Combining measures for completeness of a dose-response curve and efficacy of inhibition, resulted in the Activity Score, where a larger value indicates higher inhibitory activity and/or higher confidence in inhibitory assay result. Compounds with an activity score equal to zero are considered as non-inhibitors while compounds with activity scores above 0 and up to 40 are considered inconclusive. \cite{Lapins2013}
+Compounds were characterized by their Activity Score and regarded as inhibitors if their activity score ranged between 40 and 100. An Acitivity Score is assigned based on AC50 value, which was combined with a confidence measure. Combining measures for completeness of a dose-response curve and efficacy of inhibition, resulted in the Activity Score, where a larger value indicates higher inhibitory activity and/or higher confidence in inhibitory assay result. Compounds with an activity score equal to zero are considered as non-inhibitors while compounds with activity scores above 0 and up to 40 are considered inconclusive. \cite{Lapins2013} In this study, inconclusive compounds were not discarded: every compound with an Activity Score below 40 was labelled a non-inhibitor for binary classification.
 
 The data from Pubchem Assay 1851 is available for download from the NIH through the PubChem website. The interface changes from time to time, but I downloaded two files which comprised the entire dataset for the experiment. The first file, a structures file, contained the structural information encoded in the simplified molecular-input line-entry system (SMILES) format for each tested compound with corresponding Structure ID (SID) and Compound ID (CID) as assigned by NCBI. Another file, also organized by SID and CID, contained all of the luminescent responses from the high-throughput screen and the fitted parameters which are then summarized by the Activity Score. 
  
@@ -60,7 +60,7 @@ In situations where the data does not have a Gaussian (normal) distribution, sim
 
 \section{Modeling - Mapping Descriptors to Activity Data}
 
-At this point a complete dataset has been assembled for each isozyme that is balanced for the number of active and inactive inhibitors. That dataset was then further subdivided into a traing set and a test set for later validation of results. The preceding sections described the different methods of feature selection and normalization and the following sections outline classification algorithms and validation procedures used in this study.
+At this point a complete dataset has been assembled for each isozyme that is balanced for the number of active and inactive inhibitors. That dataset was then further subdivided into a traing set and a test set for later validation of results. The preceding sections described data balancing and normalization; the following sections outline classification algorithms and validation procedures used in this study.
 
 \begin{figure}[H]
   \centering
@@ -115,7 +115,7 @@ A confusion matrix (or error matrix or table of confusion) is a representational
   &  &  &  &
 \end{tabular}
 
-In this study, results that are both actual inhibitors according to assay data and predicted inhibitors according to the model results are deemed True Positives (TP). Similarly, actual noninhibitors that are predicted to be so are called True Negatives (TN). In the case of actual inhibitors predicted to be noninhibitors, these are labelled False Negatives (FN) and are the result of Type I errors. Noninhibitors classified as inhibitors by the model are refered to as False Positives (FP) and are the result of Type II errors.
+In this study, results that are both actual inhibitors according to assay data and predicted inhibitors according to the model results are deemed True Positives (TP). Similarly, actual noninhibitors that are predicted to be so are called True Negatives (TN). In the case of actual inhibitors predicted to be noninhibitors, these are labelled False Negatives (FN) and are the result of Type II errors. Noninhibitors classified as inhibitors by the model are refered to as False Positives (FP) and are the result of Type I errors.
 
 \subsubsection{Accuracy}
 
@@ -133,7 +133,7 @@ The true negative rate is the fraction of true negatives over the number of actu
 $$ True Negative Rate =\frac{ TN }{(TN + FP)} $$
 The true negative rate is also know as the Specificity of a classification, and in MOE Binary QSAR it is called Accuray on Inactives.
 
-\subsubsection{Binary QSAR after PLS of descriptors}
+\subsubsection{Binary QSAR Test Set Evaluation}
 The test sets were loaded and the washed structures were appended to the .csv files. All models were evaluated using the menu driven workflow in MOE and the classification probabilities were appended to the database file and saved as a .csv.  
 
 The resulting file was loaded into a Microsoft Excel spreadsheet and the predictions classified as actives or inactives. Predicted probabilities of $\geq$ 0.5 were evaluated as active inhibitor predictions and predicted probabilities of < 0.5 were deemed inactive inhibitors. Confusion matrices were then tabulated within the spreadsheet for predicted vs actual actives and inactives. And from these confusion matrices, classification accuracy measures were calculated - total accuracy, TPR, and TNR. These results were saved and the results reported below.
