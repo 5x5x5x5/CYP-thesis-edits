@@ -1,1 +1,4 @@
 
+This chapter first reports results for MOE Binary QSAR models built with 2 to 44 principal components, then compares the best MOE configuration with the three Python classifiers for each isozyme. All accuracies are the fraction of compounds classified correctly. I treat a model as good if its total accuracy exceeds 0.6.
+
+Three patterns hold for the MOE models on every isozyme. First, accuracy on inhibitors is higher than accuracy on non-inhibitors, with total accuracy in between. Second, training and test set accuracies are close, suggesting little overfitting. Third, about 20 principal components maximizes total accuracy while avoiding the drop in accuracy on non-inhibitors seen at both ends of the range. The method comparisons therefore use the 20-component MOE model.
