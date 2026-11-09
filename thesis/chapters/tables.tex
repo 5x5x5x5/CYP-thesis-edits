@@ -349,6 +349,15 @@ Isozyme & Method & Accuracy & TPR & TNR & AUC \\ \hline
 
 TPR is the fraction of actual inhibitors predicted correctly, TNR the fraction of actual non-inhibitors predicted correctly, and AUC the area under the receiver operating characteristic curve. \textit{k}-NN and SVM were more accurate on inhibitors than on non-inhibitors for most isozymes, whereas random forest was consistently more accurate on non-inhibitors.
 
+Figure~\ref{fig:roc} shows the receiver operating characteristic (ROC) curves for the three Python classifiers on each test set. The curves lie well above the chance diagonal, and the SVM curve lies at or above the other two across most of the range for every isozyme.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=1\textwidth]{../img/roc_curves_test_set.png}
+\caption[ROC Curves on the Test Sets]{Receiver operating characteristic curves on the test set for each isozyme. Each classifier was fit on the training set; the diagonal marks chance performance.}
+\label{fig:roc}
+\end{figure}
+
 \section{Overall Method Comparison}
 
 \begin{figure}[H]

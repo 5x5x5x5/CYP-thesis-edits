@@ -12,6 +12,12 @@ from pathlib import Path
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+from sklearn.base import clone
+from sklearn.metrics import roc_curve
+from sklearn.pipeline import make_pipeline
+from sklearn.preprocessing import StandardScaler
+
+from cyp_models import CLASSIFIERS, LINESTYLES, SERIES_COLORS, load_split, scores
 
 HERE = Path(__file__).parent
 IMG_DIR = HERE.parent / "img"
@@ -86,7 +92,40 @@ def plot(table: pd.DataFrame, title: str, path: Path) -> None:
     plt.close(fig)
 
 
+def plot_roc_grid(path: Path) -> None:
+    """One ROC panel per isozyme: models fit on the training set, scored on the test set."""
+    fig, axes = plt.subplots(2, 3, figsize=(10, 6.6))
+    for ax, iso in zip(axes.flat, ISOZYMES):
+        X_train, y_train, X_test, y_test = load_split(iso)
+        ax.plot([0, 1], [0, 1], color=COLORS["MOE 20PC"], lw=1)
+        for (name, clf), color, ls in zip(
+            CLASSIFIERS.items(), SERIES_COLORS, LINESTYLES
+        ):
+            model = make_pipeline(StandardScaler(), clone(clf)).fit(X_train, y_train)
+            fpr, tpr, _ = roc_curve(y_test, scores(model, X_test))
+            ax.plot(fpr, tpr, color=color, ls=ls, lw=2, label=name)
+        ax.set(title=iso.upper(), xlim=(0, 1), ylim=(0, 1.01), aspect="equal")
+        ax.grid(alpha=0.3)
+        for side in ("top", "right"):
+            ax.spines[side].set_visible(False)
+    for ax in axes[1]:
+        ax.set_xlabel("False positive rate")
+    for ax in axes[:, 0]:
+        ax.set_ylabel("True positive rate")
+    handles, labels = axes.flat[0].get_legend_handles_labels()
+    chance = plt.Line2D([], [], color=COLORS["MOE 20PC"], lw=1)
+    legend_ax = axes.flat[-1]
+    legend_ax.axis("off")
+    legend_ax.legend(
+        handles + [chance], labels + ["Chance"], loc="center", frameon=False
+    )
+    fig.tight_layout()
+    fig.savefig(path, dpi=200)
+    plt.close(fig)
+
+
 if __name__ == "__main__":
+    plot_roc_grid(IMG_DIR / "roc_curves_test_set.png")
     for which, title, name in [
         (
             "train",
