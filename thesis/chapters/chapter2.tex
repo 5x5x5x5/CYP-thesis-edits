@@ -1,15 +1,15 @@
 \section{Review of PubChem AID 1851}
   
 
-PubChem AID 1851 contains data for inhibition of five major CYP isozymes (1A2, 2C9, 2C19, 2D6 and 3A4) by 17,143 chemical compounds~\cite{Veith2009}. The tested compounds were all drugs or drug-like compounds. Most of these compounds had molecular weight below 500 daltons and logP below 5~\cite{Lapins2013}.
+PubChem AID 1851 contains data for inhibition of five major CYP isoforms (1A2, 2C9, 2C19, 2D6 and 3A4) by 17,143 chemical compounds~\cite{Veith2009}. The tested compounds were all drugs or drug-like compounds. Most of these compounds had molecular weight below 500 daltons and logP below 5~\cite{Lapins2013}.
 
 PubChem AID 1851 used low-luminescent substrates, which are converted to more-luminescent metabolites as the signal for this assay. Reaction progress was measured as increasing light intensity during CYP metabolism of the substrate. Inhibitors of a particular CYP isozyme reduce the rate of substrate metabolism and thus decrease the luminescent signal~\cite{Zlokarnik2005}.
 
 The most recent CYP inhibition assay technology is based on substrates that release luciferin as the metabolite. This is a coupled assay system in which addition of luciferase and ATP converts the freed luciferin to des-carboxyluciferin along with light emission. The format is similar to fluorescence methods, but particularly well-suited to high-throughput applications because all that is required are addition-only manipulations and luminescence plate readers~\cite{Zlokarnik2005}. The assay obtained luminescence readings at a range of compound concentrations and then determined activity parameters using the Hill equation.
 
-In PubChem AID 1851, compounds are classified as inhibitors or non-inhibitors for each CYP with an activity cutoff set to AC50 = 10~$\mu$M (AC50, “activity concentration 50”, refers to the concentration that is required to elicit half-maximal effect). However, in cases where the dose-response curve for a compound showed poor fit or the inhibition efficacy was below 60\%, the assay results were regarded as inconclusive~\cite{Veith2009}.
+In PubChem AID 1851, compounds are classified as active or inactive inhibitors for each CYP with an activity cutoff set to AC50 = 10~$\mu$M (AC50, “activity concentration 50”, refers to the concentration that is required to elicit half-maximal effect). However, in cases where the dose-response curve for a compound showed poor fit or the inhibition efficacy was below 60\%, the assay results were regarded as inconclusive~\cite{Veith2009}.
 
-Each compound received an Activity Score from 0 to 100, which combines its AC50 with confidence measures for dose-response curve completeness and inhibition efficacy. Higher scores indicate stronger inhibition, higher confidence, or both. Compounds scoring 40--100 are inhibitors, those scoring 0 are non-inhibitors, and those scoring 1--39 are inconclusive~\cite{Lapins2013}. In this study, inconclusive compounds were not discarded: every compound with an Activity Score below 40 was labelled a non-inhibitor for binary classification.
+Compounds were characterized by their Activity Score and regarded as inhibitors if their activity score ranged between 40 and 100. An Activity Score is assigned based on AC50 value, which was combined with a confidence measure. Combining measures for completeness of a dose-response curve and efficacy of inhibition, resulted in the Activity Score, where a larger value indicates higher inhibitory activity and/or higher confidence in inhibitory assay result. Compounds with an activity score equal to zero are considered as non-inhibitors while compounds with activity scores above 0 and up to 40 are considered inconclusive~\cite{Lapins2013}. In this study, inconclusive compounds were not discarded: every compound with an Activity Score below 40 was labelled inactive for binary classification.
 
 The data from PubChem AID 1851 are available for download from the NIH through the PubChem website. I downloaded two files comprising the entire data set. The first, a structures file, contained the structural information encoded in the simplified molecular-input line-entry system (SMILES) format for each tested compound with corresponding Structure ID (SID) and Compound ID (CID) as assigned by NCBI. The second, also organized by SID and CID, contained all luminescent responses from the high-throughput screen and the fitted parameters summarized by the Activity Score. 
  
@@ -33,7 +33,7 @@ The merged file was loaded into a database in the Molecular Operating Environmen
 
 The dataset was then split by isozyme into five separate files that each contained only the SID, the Activity Score, and the 186 MOE 2-D descriptors using a script in the Python programming language.
 
-For each isozyme, non-inhibitors far outnumbered inhibitors. Because some later analyses require balanced classes, a Python script randomly shuffled each isozyme's non-inhibitors and kept only as many as there were inhibitors. 
+For each isozyme, the number of active inhibitors was far outnumbered by the number of inactive inhibitors. The data file for each isozyme was subjected to a Python script that separated the inactives from actives. Then the order of the inactives was randomly shuffled and the column trimmed to the length of the activity column, thereby balancing the number of inactives and actives as required by some of the later statistical analyses.
 
 \begin{figure}[H]
   \centering
@@ -41,7 +41,7 @@ For each isozyme, non-inhibitors far outnumbered inhibitors. Because some later 
   \caption{Isozyme Data Set Preparation}
 \end{figure}
 
-Next the script randomly shuffled the balanced datasets and split them into a training set and a test set. The training set held 80\% of compounds and the test set 20\%. The split was not stratified by class; the class ratio in each split was inspected to confirm it remained balanced.
+Next the script randomly shuffled the balanced datasets and split them into a training set and a test set. The training set held 80\% of the original values and the test set held 20\% of the original values. The split was not based on activity score. The ratio of active/inactive in each split was inspected to check if they were still acceptably balanced.
 
 For each use of randomness in computation, a seed number was set for the random number generator to ensure reproducible results.  
 
@@ -60,7 +60,7 @@ When data do not have a Gaussian (normal) distribution, simple transformations c
 
 \section{Modeling - Mapping Descriptors to Activity Data}
 
-At this point, each isozyme had a complete data set, balanced between inhibitors and non-inhibitors and split into a training set and a test set. The preceding sections described data balancing and normalization; the following sections outline classification algorithms and validation procedures used in this study.
+At this point a complete dataset has been assembled for each isozyme that is balanced for the number of active and inactive inhibitors. That dataset was then further subdivided into a training set and a test set for later validation of results. The preceding sections described data balancing and normalization; the following sections outline classification algorithms and validation procedures used in this study.
 
 \begin{figure}[H]
   \centering
@@ -74,7 +74,7 @@ The Binary QSAR approach described by Labute \cite{Labute1999} and as implemente
 
 Earlier work in Dr. Zheng's lab found that partial least squares (PLS) regression, a quantitative method in MOE that also begins with PCA, predicted poorly on this data set.
 
-The training data were loaded into MOE and Binary QSAR was run from its menu-driven interface. The Activity Score threshold was set to 39, so compounds scoring 40 or above were labelled inhibitors and those scoring 39 or below non-inhibitors. The smoothing parameter was left at the default value of 0.25. MOE automatically performs principal component analysis on high-dimensional datasets before Binary QSAR; it offers no way to use the full suite of molecular descriptors untransformed.
+To carry out Binary QSAR, the training data was loaded into MOE and then a menu driven interface was used to initiate the Binary QSAR method. A threshold Activity Score value of 39 was selected; meaning all activity values 40 and above were considered active and all values 39 and below were considered inactive. The smoothing parameter was left at the default value of 0.25. MOE automatically performs principal component analysis on high-dimensional datasets before Binary QSAR and there was no way to use the full suite of molecular descriptors untransformed.
 
 For each isozyme, several models were built, each with a different number of principal components. Principal components are mutually orthogonal, so each captures a separate portion of the total variance. The assumption is that inclusion of more principal components leads to more of the variance being accounted for in a classification decision. However, since each principal component is a linear combination of all the variables, the benefits of dimensionality reduction come at the cost of interpretability. One aim of this study is to find the fewest principal components that still give good predictions.  For exploratory purposes, models with 2, 5, 10, 15, 20, 30, and 44 principal components were constructed. 
 
@@ -115,7 +115,7 @@ A confusion matrix (also called an error matrix) summarizes a classifier's perfo
   &  &  &  &
 \end{tabular}
 
-In this study, actual inhibitors (according to the assay) that the model predicts as inhibitors are true positives (TP), and actual non-inhibitors predicted as non-inhibitors are true negatives (TN). Actual inhibitors predicted as non-inhibitors are false negatives (FN), or Type II errors. Non-inhibitors predicted as inhibitors are false positives (FP), or Type I errors.
+In this study, results that are both actual inhibitors according to assay data and predicted inhibitors according to the model results are deemed True Positives (TP). Similarly, actual noninhibitors that are predicted to be so are called True Negatives (TN). In the case of actual inhibitors predicted to be noninhibitors, these are labelled False Negatives (FN) and are the result of Type II errors. Noninhibitors classified as inhibitors by the model are referred to as False Positives (FP) and are the result of Type I errors.
 
 \subsubsection{Accuracy}
 
@@ -123,23 +123,23 @@ Accuracy is the fraction of instances classified correctly:
 $$ ACC =\frac{(TP + TN)}{(TP + FP + TN + FN)} $$
 where TP is the number of true positives, TN is the number of true negatives, FP is the number of false positives or over-predictions, and FN is the number of false negatives or missed predictions.
 
-Accuracy is not an optimal measure of model performance if the data set is unbalanced (i.e. sizes of the classes are unequal) or if some errors are more costly than others (e.g. false negatives compared to false positives)~\cite{Lapins2013}. For this reason, all data sets were balanced to contain roughly equal numbers of inhibitors and non-inhibitors.
+Accuracy is not an optimal measure of model performance if the data set is unbalanced (i.e. sizes of the classes are unequal) or if some errors are more costly than others (e.g. false negatives compared to false positives)~\cite{Lapins2013}. For this reason, all datasets were rebalanced to contain roughly equal numbers of active and inactive inhibitors.
 
 I also calculated the true positive rate (TPR) and true negative rate (TNR) for all models. TPR is the fraction of actual inhibitors predicted correctly:
 $$ \mathrm{TPR} = \frac{TP}{TP + FN} $$
 TPR is also called sensitivity; MOE calls it Accuracy on Actives.
 
-TNR is the fraction of actual non-inhibitors predicted correctly:
+TNR is the fraction of actual noninhibitors predicted correctly:
 $$ \mathrm{TNR} = \frac{TN}{TN + FP} $$
 TNR is also called specificity; MOE calls it Accuracy on Inactives.
 
 \subsubsection{Binary QSAR Test Set Evaluation}
 The test sets were loaded and the washed structures were appended to the .csv files. All models were evaluated using MOE's menu-driven workflow and the classification probabilities were appended to the database file and saved as a .csv.  
 
-In Microsoft Excel, predicted probabilities $\geq 0.5$ were classified as inhibitors and those $< 0.5$ as non-inhibitors. Confusion matrices, accuracy, TPR and TNR were then tabulated in the spreadsheet.
+The resulting file was loaded into a Microsoft Excel spreadsheet and the predictions classified as actives or inactives. Predicted probabilities of $\geq$ 0.5 were evaluated as active inhibitor predictions and predicted probabilities of $<$ 0.5 were deemed inactive inhibitors. Confusion matrices were then tabulated within the spreadsheet for predicted vs actual actives and inactives. And from these confusion matrices, classification accuracy measures were calculated - total accuracy, TPR, and TNR. These results were saved and the results reported below.
 
 \subsubsection{Python Classifiers Using the Full Set of 2-D Descriptors}
-The Python models omit PCA and use all 186 descriptors. For each isozyme, the Activity Score was converted to a binary response (1 for scores $\geq 40$, 0 otherwise), and all 186 descriptors served as predictors. Each classifier was combined with a standardization step (mean $0$, standard deviation $1$) in a scikit-learn pipeline, so the scaling parameters were estimated only from the data each model was fit on. Hyperparameters matched the scikit-learn 0.15 defaults: \textit{k}-NN with $k = 5$; a random forest of 10 trees considering $\sqrt{186}$ features at each split; and an SVM with a radial basis function kernel, $C = 1$ and $\gamma = 1/186$. Each model was first scored by 5-fold cross-validation on the training set, then fit on the full training set and used to predict the held-out test set. Accuracy, TPR and TNR were calculated from the resulting confusion matrices, and the area under the receiver operating characteristic curve (AUC) from each model's predicted probability (or, for the SVM, its decision function value).
+The Python models omit PCA and use all 186 descriptors. For each isozyme, the Activity Score was converted to a binary response (1 for scores $\geq 40$, 0 otherwise), and all 186 descriptors served as predictors. Each classifier was combined with a standardization step (mean $0$, standard deviation $1$) in a scikit-learn pipeline, so the scaling parameters were estimated only from the data each model was fit on. Hyperparameters were fixed as follows: \textit{k}-NN with $k = 5$; a random forest of 10 trees considering $\sqrt{186}$ features at each split; and an SVM with a radial basis function kernel, $C = 1$ and $\gamma = 1/186$. Each model was first scored by 5-fold cross-validation on the training set, then fit on the full training set and used to predict the held-out test set. Accuracy, TPR and TNR were calculated from the resulting confusion matrices, and the area under the receiver operating characteristic curve (AUC) from each model's predicted probability (or, for the SVM, its decision function value).
 
 One notebook per isozyme runs the three classifiers through a shared evaluation module. Code and results are documented in Jupyter notebooks hosted on GitHub (https://github.com/5x5x5x5/CYP/), so the analysis is easy to verify and extend. Because scikit-learn gives every classifier the same interface, trying another algorithm requires only adding it to the list of classifiers.
 

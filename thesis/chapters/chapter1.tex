@@ -9,7 +9,7 @@ Drug development productivity has declined for three decades. The difficulty of 
 
 Quantitative structure-activity relationship (QSAR) modeling, which relates compound structure to bioactivity, dates to at least Hansch~\cite{Hansch1964} and has a long history in \textit{in silico} drug development. QSAR began with directly measured, and later derived, compound features, which were used to build expert systems or statistical models that predict biological activity. Over the same decades, machine learning emerged, using computation in an analogous but more general way: to associate features with results, inputs with outputs. Machine learning algorithms learn to perform tasks by generalizing from examples.
 
-Statistical learning shares machine learning's focus on prediction but emphasizes models and methods that scientists and engineers can interpret and use~\cite{James2013}. Extending statistical learning to the pharmaceutical sciences is an important precursor to systems biology and systems pharmacology modeling.
+Statistical machine learning builds upon the peer prediction of machine learning. It also allows for prediction but focuses more on models and methods that can be used by scientists and engineers~\cite{James2013}. Further extension of statistical learning to the pharmaceutical sciences can lead to important contributions to systems pharmacology. Or rather, statistical learning methods are an important precursor to the needs of systems biology and systems pharmacology modeling.
 
 This project compares different techniques for cytochrome P450 inhibition prediction in the framework of statistical learning. To demonstrate generality and applicability to the pharmaceutical sciences, this study covers the five cytochrome P450 (CYP) isozymes that are involved in metabolism of 90\% of all therapeutic drugs (CYPs 1A2, 2C9, 2C19, 2D6 and 3A4)~\cite{Veith2009}.
 
@@ -166,7 +166,7 @@ New research findings, supporting data and methods should therefore be made publ
 \pagebreak
 
 \section{Aims}
-This project builds QSAR models that classify compounds, from structure alone, as inhibitors or non-inhibitors of five cytochrome P450 isozymes, as a way to flag the risk of off-target effects in candidate molecules.
+The aim of this project is to build QSAR models that quantify the risk of off-target effects for candidate molecules by building statistical machine learning models that make binary classification as inhibitors or non-inhibitors of Cytochrome P450 of compounds based on their structure.
 
 I compare a well-accepted commercial method of binary classification with three open-source machine learning methods, according to the following plan:
 

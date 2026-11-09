@@ -29,9 +29,8 @@ SEED = 0
 SERIES_COLORS = ["#2a78d6", "#eb6834", "#1baf7a"]
 LINESTYLES = ["-", "--", ":"]
 
-# Hyperparameters match the scikit-learn defaults the thesis used in 2015
-# (v0.15). Later releases changed the SVC gamma and random forest
-# n_estimators defaults, so they are pinned here.
+# Hyperparameters are fixed here because scikit-learn's defaults for SVC gamma
+# and random forest n_estimators have changed across releases.
 CLASSIFIERS = {
     "k-NN": KNeighborsClassifier(n_neighbors=5),
     "Random Forest": RandomForestClassifier(

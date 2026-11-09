@@ -35,14 +35,14 @@ PC & Total          & Active          & Inactive \\ \hline
 \end{minipage}
 \end{table}
 
-The 1A2 models were trained on 4820 inhibitors and 4780 non-inhibitors and tested on 1180 inhibitors and 1220 non-inhibitors.
+Cytochrome P450 isozyme 1A2 models were trained on 4820 actives and 4780 inactives in the training set, and validated against 1180 actives and 1220 inactives in the test set.
 \begin{figure}[H]
 \includegraphics[width=1\textwidth]{../img/1a2_moe_model_accuracy.png}
 \caption{1A2 MOE Model Accuracy}
 \label{fig:1a2}
 \end{figure}
 
-With 20 principal components (Figure~\ref{fig:1a2}), test set accuracy is 0.748 overall, 0.779 on inhibitors and 0.721 on non-inhibitors.
+At 20PCs (Figure~\ref{fig:1a2}), the total accuracy on the test set is 0.748. Accuracy on Actives is 0.779 and accuracy on inactives is 0.721.
 
 
 \section{2C9 MOE Models}
@@ -81,14 +81,14 @@ PC & Total          & Active          & Inactive\\ \hline
 \end{minipage}
 \end{table}
 
-The 2C9 models were trained on 3266 inhibitors and 3327 non-inhibitors and tested on 855 inhibitors and 794 non-inhibitors.
+Cytochrome P450 isozyme 2C9 models were trained on 3266 actives and 3327 inactives in the training set, and validated against 855 actives and 794 inactives in the test set.
 \begin{figure}[H]
 \includegraphics[width=1\textwidth]{../img/2c9_moe_model_accuracy.png}
 \caption{2C9 MOE Model Accuracy}
 \label{fig:2c9}
 \end{figure}
 
-With 20 principal components (Figure~\ref{fig:2c9}), test set accuracy is 0.685 overall, 0.731 on inhibitors and 0.636 on non-inhibitors.
+At 20PCs (Figure~\ref{fig:2c9}), the total accuracy on the test set is 0.685. Accuracy on Actives is 0.731 and accuracy on inactives is 0.636.
 
 
 \section{2C19 MOE Models}
@@ -127,14 +127,14 @@ PC & Total          & Active          & Inactive   \\ \hline
 \end{minipage}
 \end{table}
 
-The 2C19 models were trained on 4721 inhibitors and 4741 non-inhibitors and tested on 1193 inhibitors and 1173 non-inhibitors.
+Cytochrome P450 isozyme 2C19 models were trained on 4721 actives and 4741 inactives in the training set, and validated against 1193 actives and 1173 inactives in the test set.
 \begin{figure}[H]
 \includegraphics[width=1\textwidth]{../img/2c19_moe_model_accuracy.png}
 \caption{2C19 MOE Model Accuracy}
 \label{fig:2c19}
 \end{figure}
 
-With 20 principal components (Figure~\ref{fig:2c19}), test set accuracy is 0.698 overall, 0.758 on inhibitors and 0.638 on non-inhibitors.
+At 20PCs (Figure~\ref{fig:2c19}), the total accuracy on the test set is 0.698. Accuracy on Actives is 0.758 and accuracy on inactives is 0.638.
 
 
 \section{2D6 MOE Models}
@@ -173,14 +173,14 @@ PC & Total          & Active          & Inactive \\ \hline
 \end{minipage}
 \end{table}
 
-The 2D6 models were trained on 2219 inhibitors and 2214 non-inhibitors and tested on 552 inhibitors and 557 non-inhibitors.
+Cytochrome P450 isozyme 2D6 models were trained on 2219 actives and 2214 inactives in the training set, and validated against 552 actives and 557 inactives in the test set.
 \begin{figure}[H]
 \includegraphics[width=1\textwidth]{../img/2d6_moe_model_accuracy.png}
 \caption{2D6 MOE Model Accuracy}
 \label{fig:2d6}
 \end{figure}
 
-With 20 principal components (Figure~\ref{fig:2d6}), test set accuracy is 0.683 overall, 0.699 on inhibitors and 0.668 on non-inhibitors.
+At 20PCs (Figure~\ref{fig:2d6}), the total accuracy on the test set is 0.683. Accuracy on Actives is 0.699 and accuracy on inactives is 0.668.
 
 
 \section{3A4 MOE Models}
@@ -219,14 +219,14 @@ PC & Total          & Active          & Inactive \\ \hline
 \end{minipage}
 \end{table}
 
-The 3A4 models were trained on 4234 inhibitors and 4193 non-inhibitors and tested on 1033 inhibitors and 1074 non-inhibitors.
+Cytochrome P450 isozyme 3A4 models were trained on 4234 actives and 4193 inactives in the training set, and validated against 1033 actives and 1074 inactives in the test set.
 \begin{figure}[H]
 \includegraphics[width=1\textwidth]{../img/3a4_moe_model_accuracy.png}
 \caption{3A4 MOE Model Accuracy}
 \label{fig:3a4}
 \end{figure}
 
-With 20 principal components (Figure~\ref{fig:3a4}), test set accuracy is 0.686 overall, 0.736 on inhibitors and 0.638 on non-inhibitors.
+At 20PCs (Figure~\ref{fig:3a4}), the total accuracy on the test set is 0.686. Accuracy on Actives is 0.736 and accuracy on inactives is 0.638.
 
 
 \section{1A2 Classification Method Comparison}
@@ -347,7 +347,7 @@ Isozyme & Method & Accuracy & TPR & TNR & AUC \\ \hline
 \end{tabular}
 \end{table}
 
-TPR is the fraction of actual inhibitors predicted correctly, TNR the fraction of actual non-inhibitors predicted correctly, and AUC the area under the receiver operating characteristic curve. \textit{k}-NN and SVM were more accurate on inhibitors than on non-inhibitors for most isozymes, whereas random forest was consistently more accurate on non-inhibitors.
+TPR is the fraction of actual inhibitors predicted correctly, TNR the fraction of actual noninhibitors predicted correctly, and AUC the area under the receiver operating characteristic curve. \textit{k}-NN and SVM were more accurate on actives than on inactives for most isozymes, whereas random forest was consistently more accurate on inactives.
 
 Figure~\ref{fig:roc} shows the receiver operating characteristic (ROC) curves for the three Python classifiers on each test set. The curves lie well above the chance diagonal, and the SVM curve lies at or above the other two across most of the range for every isozyme.
 
