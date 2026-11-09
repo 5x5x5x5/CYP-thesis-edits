@@ -1,22 +1,22 @@
-\section{Review of PubChem AID 1851}
+\section{Review of PubChem Assay 1851}
   
 
-PubChem AID 1851 contains data for inhibition of five major CYP isoforms (1A2, 2C9, 2C19, 2D6 and 3A4) by 17,143 chemical compounds~\cite{Veith2009}. The tested compounds were all drugs or drug-like compounds. Most of these compounds had molecular weight below 500 daltons and logP below 5~\cite{Lapins2013}.
+PubChem BioAssay 1851 contains data for inhibition of five major CYP isoforms (1A2, 2C9, 2C19, 2D6 and 3A4) by 17,143 chemical compounds~\cite{Veith2009}. The tested compounds were all drugs or drug-like compounds. Most of these compounds had molecular weight below 500 daltons and logP below 5~\cite{Lapins2013}.
 
-PubChem AID 1851 used low-luminescent substrates, which are converted to more-luminescent metabolites as the signal for this assay. Reaction progress was measured as increasing light intensity during CYP metabolism of the substrate. Inhibitors of a particular CYP isozyme reduce the rate of substrate metabolism and thus decrease the luminescent signal~\cite{Zlokarnik2005}.
+PubChem Assay 1851 used low-luminescent substrates, which are converted to more-luminescent metabolites as the signal for this assay. Reaction progress was measured as increasing light intensity during CYP metabolism of the substrate. Inhibitors of a particular CYP isozyme reduce the rate of substrate metabolism and thus decrease the luminescent signal~\cite{Zlokarnik2005}.
 
 The most recent CYP inhibition assay technology is based on substrates that release luciferin as the metabolite. This is a coupled assay system in which addition of luciferase and ATP converts the freed luciferin to des-carboxyluciferin along with light emission. The format is similar to fluorescence methods, but particularly well-suited to high-throughput applications because all that is required are addition-only manipulations and luminescence plate readers~\cite{Zlokarnik2005}. The assay obtained luminescence readings at a range of compound concentrations and then determined activity parameters using the Hill equation.
 
-In PubChem AID 1851, compounds are classified as active or inactive inhibitors for each CYP with an activity cutoff set to AC50 = 10~$\mu$M (AC50, “activity concentration 50”, refers to the concentration that is required to elicit half-maximal effect). However, in cases where the dose-response curve for a compound showed poor fit or the inhibition efficacy was below 60\%, the assay results were regarded as inconclusive~\cite{Veith2009}.
+In the PubChem Assay 1851, compounds are classified as active or inactive inhibitors for each CYP with an activity cutoff set to AC50 = 10~$\mu$M (AC50, “activity concentration 50”, refers to the concentration that is required to elicit half-maximal effect). However, in cases where the dose-response curve for a compound showed poor fit or the inhibition efficacy was below 60\%, the assay results were regarded as inconclusive~\cite{Veith2009}.
 
 Compounds were characterized by their Activity Score and regarded as inhibitors if their activity score ranged between 40 and 100. An Activity Score is assigned based on AC50 value, which was combined with a confidence measure. Combining measures for completeness of a dose-response curve and efficacy of inhibition, resulted in the Activity Score, where a larger value indicates higher inhibitory activity and/or higher confidence in inhibitory assay result. Compounds with an activity score equal to zero are considered as non-inhibitors while compounds with activity scores above 0 and up to 40 are considered inconclusive~\cite{Lapins2013}. In this study, inconclusive compounds were not discarded: every compound with an Activity Score below 40 was labelled inactive for binary classification.
 
-The data from PubChem AID 1851 are available for download from the NIH through the PubChem website. I downloaded two files comprising the entire data set. The first, a structures file, contained the structural information encoded in the simplified molecular-input line-entry system (SMILES) format for each tested compound with corresponding Structure ID (SID) and Compound ID (CID) as assigned by NCBI. The second, also organized by SID and CID, contained all luminescent responses from the high-throughput screen and the fitted parameters summarized by the Activity Score. 
+The data from PubChem Assay 1851 is available for download from the NIH through the PubChem website. I downloaded two files comprising the entire dataset. The first, a structures file, contained the structural information encoded in the simplified molecular-input line-entry system (SMILES) format for each tested compound with corresponding Structure ID (SID) and Compound ID (CID) as assigned by NCBI. The second, also organized by SID and CID, contained all luminescent responses from the high-throughput screen and the fitted parameters summarized by the Activity Score. 
  
 
 \section{Data Set Preparation and Molecular Descriptor Generation }
 
-Both data files from PubChem AID 1851 were downloaded as comma separated value (.csv) files and merged on the SID column using Python's pandas library, a library for handling, manipulating and reshaping structured data.
+Both data files from Bioassay 1851 were downloaded as comma separated value (.csv) files and merged on the SID column using Python's pandas library, a library for handling, manipulating and reshaping structured data.
 
 Preprocessing typically begins with data cleaning, because raw data often contain anomalies, errors, or inconsistencies such as missing data, incomplete data, and invalid character values which may cause trouble in data analysis if left untreated. It is more complicated when data are collated from many formats that require harmonization and redundancy elimination~\cite{Nantasenamat2009}. Here, the source files needed little preprocessing.
 
@@ -45,7 +45,7 @@ Next the script randomly shuffled the balanced datasets and split them into a tr
 
 For each use of randomness in computation, a seed number was set for the random number generator to ensure reproducible results.  
 
-The balanced and split data sets are archived on Figshare for permanent, free and open access (http://dx.doi.org/10.6084/m9.figshare.1181846) and \\
+The balanced and split datasets are archived on Figshare for permanent, free and open access (http://dx.doi.org/10.6084/m9.figshare.1181846) and \\
 (http://dx.doi.org/10.6084/m9.figshare.1066108). All subsequent analyses use these same splits for comparability.
 
 \section{Data Preprocessing}
@@ -72,7 +72,7 @@ At this point a complete dataset has been assembled for each isozyme that is bal
 
 The Binary QSAR approach described by Labute \cite{Labute1999} and as implemented in the 2011 version of MOE, classifies activity with a Bayesian model after reducing the descriptors to principal components. Principal component analysis (PCA) projects the data onto a smaller set of axes that point in the directions of greatest variance. The first principal component explains the most variance, the second the next most, and so on. Models are subsequently built with the original data projected onto any or all of these principal components.
 
-Earlier work in Dr. Zheng's lab found that partial least squares (PLS) regression, a quantitative method in MOE that also begins with PCA, predicted poorly on this data set.
+Earlier work in Dr. Zheng's lab found that partial least squares (PLS) regression, a quantitative method in MOE that also begins with PCA, predicted poorly on this dataset.
 
 To carry out Binary QSAR, the training data was loaded into MOE and then a menu driven interface was used to initiate the Binary QSAR method. A threshold Activity Score value of 39 was selected; meaning all activity values 40 and above were considered active and all values 39 and below were considered inactive. The smoothing parameter was left at the default value of 0.25. MOE automatically performs principal component analysis on high-dimensional datasets before Binary QSAR and there was no way to use the full suite of molecular descriptors untransformed.
 
@@ -87,7 +87,7 @@ Python is a dynamically typed, object-oriented, interpreted language. Its main s
 The \textit{k}-NN algorithm predicts the class of an object from the classes of its \textit{k} most similar training set objects~\cite{Lapins2013}. It finds the \textit{k} nearest points under a distance measure such as Euclidean distance and assigns the majority class among them.
 
 \subsection{Random Forest (RF)}
-A random forest is an ensemble of decision trees. Decision trees are made of nodes and branches. At each node, the data set is split based on the value of some attribute that is selected so that the instances of different classes are predominately moved to different branches. Classification passes each instance from the root node along the branches to a leaf node. To introduce diversity between the trees of a random forest, a small random subset of features is considered at each node of each tree. The forest classifies by majority vote of all trees~\cite{Lapins2013}.
+A random forest is an ensemble of decision trees. Decision trees are made of nodes and branches. At each node, the dataset is split based on the value of some attribute that is selected so that the instances of different classes are predominately moved to different branches. Classification passes each instance from the root node along the branches to a leaf node. To introduce diversity between the trees of a random forest, a small random subset of features is considered at each node of each tree. The forest classifies by majority vote of all trees~\cite{Lapins2013}.
 
 \subsection{Support Vector Machines (SVM)}
 An SVM finds the hyperplane that separates the classes with the greatest margin. SVMs use a kernel function to project the data into a higher-dimensional feature space before finding the hyperplane~\cite{Lapins2013}. The margin is the minimum distance from the data points to the hyperplane. The points closest to the hyperplane, called support vectors, determine its position.
