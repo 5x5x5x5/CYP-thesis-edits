@@ -34,8 +34,9 @@ COLORS = {
     "Random Forest": "#eb6834",
     "SVM": "#1baf7a",
 }
-HATCHES = {"MOE 20PC": "", "k-NN": "//", "Random Forest": "..", "SVM": "xx"}
+HATCHES = {"MOE 20PC": "", "k-NN": "/", "Random Forest": ".", "SVM": "x"}
 INK = "#2b2b29"
+plt.rcParams["hatch.linewidth"] = 0.8
 
 
 def accuracy_table(which: str) -> pd.DataFrame:
@@ -64,15 +65,22 @@ def plot(table: pd.DataFrame, title: str, path: Path) -> None:
             edgecolor="white",
             linewidth=1,
         )
-    ax.axhline(0.6, color=INK, lw=1, ls="--", zorder=0)
-    ax.text(len(table) - 0.45, 0.61, "0.6 threshold", ha="right", va="bottom", color=INK, fontsize=9)
+    ax.axhline(0.6, color=INK, lw=1, ls="--", zorder=0, label="0.6 accuracy threshold")
     ax.set_xticks(x, [i.upper() for i in table.index])
-    ax.set(ylim=(0, 1), ylabel="Accuracy", xlabel="Cytochrome P450 isozyme", title=title)
+    ax.set(
+        ylim=(0, 1), ylabel="Accuracy", xlabel="Cytochrome P450 isozyme", title=title
+    )
     ax.grid(axis="y", alpha=0.3)
     ax.set_axisbelow(True)
     for side in ("top", "right"):
         ax.spines[side].set_visible(False)
-    ax.legend(ncol=4, loc="upper center", bbox_to_anchor=(0.5, -0.14), frameon=False)
+    ax.legend(
+        ncol=5,
+        loc="upper center",
+        bbox_to_anchor=(0.5, -0.14),
+        frameon=False,
+        fontsize=9,
+    )
     fig.tight_layout()
     fig.savefig(path, dpi=200)
     plt.close(fig)
@@ -80,7 +88,11 @@ def plot(table: pd.DataFrame, title: str, path: Path) -> None:
 
 if __name__ == "__main__":
     for which, title, name in [
-        ("train", "Method comparison on the training set (Python: 5-fold CV)", "method_comparison_training_set.png"),
+        (
+            "train",
+            "Method comparison on the training set (Python: 5-fold CV)",
+            "method_comparison_training_set.png",
+        ),
         ("test", "Method comparison on the test set", "method_comparison_test_set.png"),
     ]:
         t = accuracy_table(which)

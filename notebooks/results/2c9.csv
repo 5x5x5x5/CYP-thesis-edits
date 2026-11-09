@@ -1,0 +1,7 @@
+Method,Set,Accuracy,TPR,TNR,Test AUC
+k-NN,Training (5-fold CV),0.719,0.729,0.71,
+k-NN,Test,0.712,0.749,0.673,0.771
+Random Forest,Training (5-fold CV),0.725,0.691,0.757,
+Random Forest,Test,0.725,0.705,0.746,0.791
+SVM,Training (5-fold CV),0.748,0.794,0.703,
+SVM,Test,0.754,0.806,0.698,0.816

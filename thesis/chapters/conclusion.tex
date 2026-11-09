@@ -2,7 +2,7 @@
 
 QSAR models and their value in informing regulatory decision making will likely increase with the standardization of analytical approaches, more complete and reliable data collection methods and a better understanding of toxicity mechanisms in the role of disease as well as individual susceptibility to adverse clinical events~\cite{Kruhlak2012}.
 
-I built and compared four methods for classifying compounds as inhibitors or non-inhibitors of five cytochrome P450 isozymes. All methods reached test accuracies between 0.674 and 0.804, well above the 0.5 expected from random guessing on balanced classes, and support vector machines performed best on every isozyme.
+I built and compared four methods for classifying compounds as inhibitors or non-inhibitors of five cytochrome P450 isozymes. All methods reached test accuracies between 0.683 and 0.808, well above the 0.5 expected from random guessing on balanced classes. On every isozyme, all three Python methods were more accurate than MOE Binary QSAR, and support vector machines were the most accurate. I did not test whether these differences are statistically significant.
 
 Many other methods remain to be tried, particularly neural networks and other Bayesian methods. The data and code for this study are publicly available, so others can benchmark new methods against these results.
 
