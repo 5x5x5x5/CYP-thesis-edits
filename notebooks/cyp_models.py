@@ -94,11 +94,12 @@ def scores(model, X: np.ndarray) -> np.ndarray:
 
 
 def calibration_table(y_true: np.ndarray, prob: np.ndarray) -> pd.DataFrame:
-    """Observed inhibitor frequency at each distinct predicted probability.
+    """Observed inhibitor frequency in bins of predicted probability.
 
-    With a 10-tree random forest, predicted probabilities are multiples of 0.1.
+    A 10-tree forest mostly predicts multiples of 0.1, but impure leaves give
+    occasional values in between, so probabilities are binned to the nearest 0.1.
     """
-    df = pd.DataFrame({"pred_prob": prob.round(2), "inhibitor": y_true})
+    df = pd.DataFrame({"pred_prob": prob.round(1), "inhibitor": y_true})
     return (
         df.groupby("pred_prob")["inhibitor"]
         .agg(count="size", observed_freq="mean")
