@@ -10,7 +10,7 @@
 \title{\textbf{Cytochrome P450 Inhibitor Classification Revisited:\\
 A Decade of Algorithmic, Representational, and AI-Coordinated Uplift}}
 \author{Daniel E. Siegle\\
-\small Extension to \emph{Cytochrome P450 Inhibitor Classification with Statistical Learning} (M.S.\ Thesis, NCCU, 2015)}
+\footnotesize Extension to \emph{Cytochrome P450 Inhibitor Classification with Statistical Learning} (M.S.\ Thesis, NCCU, 2015)}
 \date{November 2026}
 
 \begin{document}
@@ -28,7 +28,7 @@ When I completed my 2015 thesis on \emph{in silico} cytochrome P450 (CYP) inhibi
 \section{Data and Zero-Leakage Validation Protocol}
 All models use the exact 2015 training and test splits for CYP 1A2 ($9{,}600 / 2{,}400$), 2C9 ($6{,}593 / 1{,}649$), 2C19 ($9{,}462 / 2{,}366$), 2D6 ($4{,}433 / 1{,}109$), and 3A4 ($8{,}427 / 2{,}107$). Unique PubChem SIDs ($16{,}725$) were mapped to canonical SMILES and Bemis--Murcko scaffolds; the 22 SIDs ($\approx 0.13\%$) lacking SMILES are retained in every evaluation via fold-median descriptor imputation, zero fingerprint vectors, dummy single-node graphs, and empty SMILES token sequences so that \textbf{100\% of every test set} is scored.
 
-Internal validation uses identical 5-fold \texttt{StratifiedKFold(n\_splits=5, shuffle=True, random\_state=0)} splits across all tiers. All imputers, scalers (\texttt{StandardScaler}, \texttt{QuantileTransformer}), and rare-bit filters ($\text{count} \ge 5$) are fit strictly inside each training fold. For 5-head multi-task models (Tiers 2B, 3A, 3B), all SIDs in \texttt{test\{iso\}.csv} are excluded from the entire 5-head master pool, and within each fold $k$ all fold-$k$ validation SIDs are excluded from all five heads (verified by runtime assertions; Figure~\ref{fig:arch}B).
+Internal validation uses identical 5-fold \texttt{StratifiedKFold} splits (\texttt{shuffle=True}, \texttt{random\_state=0}) across all tiers. All imputers, scalers (\texttt{StandardScaler}, \texttt{QuantileTransformer}), and rare-bit filters ($\text{count} \ge 5$) are fit strictly inside each training fold. For 5-head multi-task models (Tiers 2B, 3A, 3B), all SIDs in \texttt{test\{iso\}.csv} are excluded from the entire 5-head master pool, and within each fold $k$ all fold-$k$ validation SIDs are excluded from all five heads (verified by runtime assertions; Figure~\ref{fig:arch}B).
 
 \begin{figure}[htbp]
   \centering
@@ -48,9 +48,10 @@ Multi-task neural networks (Tiers 2B, 3A, 3B) optimize a masked, task-weighted b
   \mathcal{L}_{\text{MT}} = \frac{\sum_{i \in \mathcal{B}} \sum_{t=1}^{5} m_{it}\, w_t\, \ell_{\text{BCE}}(\hat{z}_{it}, y_{it})}{\sum_{i \in \mathcal{B}} \sum_{t=1}^{5} m_{it}\, w_t}.
 \end{equation}
 In Tier 3A, each GINE layer updates atom representation $\mathbf{h}_v^{(\ell)}$ using a global virtual node $\mathbf{g}^{(\ell)}$ and incident bond embeddings $\mathbf{e}_{uv}$:
-\begin{equation}
-  \mathbf{h}_v^{(\ell+1)} = \operatorname{LayerNorm}\!\left(\mathbf{h}_v^{(\ell)} + \operatorname{MLP}^{(\ell)}\!\left((1+\epsilon^{(\ell)})\tilde{\mathbf{h}}_v^{(\ell)} + \sum_{u \in \mathcal{N}(v)} \operatorname{SiLU}(\tilde{\mathbf{h}}_u^{(\ell)} + \mathbf{e}_{uv})\right)\right), \quad \tilde{\mathbf{h}}_v^{(\ell)} = \mathbf{h}_v^{(\ell)} + \mathbf{g}^{(\ell)}.
-\end{equation}
+\begin{align}
+  \tilde{\mathbf{h}}_v^{(\ell)} &= \mathbf{h}_v^{(\ell)} + \mathbf{g}^{(\ell)}, \\
+  \mathbf{h}_v^{(\ell+1)} &= \operatorname{LayerNorm}\!\left(\mathbf{h}_v^{(\ell)} + \operatorname{MLP}^{(\ell)}\!\left((1+\epsilon^{(\ell)})\tilde{\mathbf{h}}_v^{(\ell)} + \sum_{u \in \mathcal{N}(v)} \operatorname{SiLU}(\tilde{\mathbf{h}}_u^{(\ell)} + \mathbf{e}_{uv})\right)\right).
+\end{align}
 Finally, Tier 4 meta-stackers combine $M$ base probability predictions via nested-CV $L_2$ logistic regression on clipped log-odds, $\hat{p}_{\text{stack}}(x) = \sigma(\beta_0 + \sum_{m=1}^{M} \beta_m \operatorname{logit}(\hat{p}_m(x)))$, evaluated with Brier score, 10-bin ECE, exact Sun \& Xu (2014) DeLong ROC-AUC tests, and exact binomial McNemar tests.
 
 \section{Results}
@@ -67,8 +68,10 @@ Figure~\ref{fig:progression} and Table~\ref{tab:main} report held-out test perfo
 \begin{table}[htbp]
 \centering
 \scriptsize
+\setlength{\tabcolsep}{4pt}
 \caption{Held-out test Accuracy / ROC-AUC across all five CYP isozymes (100\% test coverage).}
 \label{tab:main}
+\resizebox{\textwidth}{!}{%
 \begin{tabular}{llccccccc}
 \toprule
 Tier & Model & 1A2 & 2C9 & 2C19 & 2D6 & 3A4 & Mean Acc & Mean AUC \\
@@ -85,7 +88,8 @@ Tier 4 Open & \texttt{Grand\_OpenSource\_Stack} & 0.834 / 0.912 & \textbf{0.784}
 Tier 4 All & \texttt{Grand\_AllModal\_Stack} & \textbf{0.837} / \textbf{0.913} & 0.782 / 0.856 & 0.806 / 0.878 & 0.801 / 0.863 & \textbf{0.803} / \textbf{0.886} & 0.8056 & \textbf{0.8792} \\
 Tier 4 All & \texttt{Grand\_AllModal\_Blend} & 0.835 / 0.912 & 0.783 / \textbf{0.857} & 0.807 / \textbf{0.878} & \textbf{0.808} / \textbf{0.863} & 0.799 / 0.886 & \textbf{0.8063} & \textbf{0.8792} \\
 \bottomrule
-\end{tabular}
+\end{tabular}%
+}
 \end{table}
 
 \begin{figure}[htbp]
