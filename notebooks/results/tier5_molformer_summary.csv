@@ -1,0 +1,6 @@
+isozyme,feature_set,model,cv_acc,cv_auc,test_acc,test_auc,test_brier,test_logloss
+1a2,SMILES_Only_JointRegCls,MT_MoLFormer_XL,0.8095,0.8892,0.8267,0.9037,0.1236,0.3934
+2c9,SMILES_Only_JointRegCls,MT_MoLFormer_XL,0.7584,0.8333,0.7835,0.8470,0.1573,0.4892
+2c19,SMILES_Only_JointRegCls,MT_MoLFormer_XL,0.7685,0.8467,0.8047,0.8748,0.1414,0.4448
+2d6,SMILES_Only_JointRegCls,MT_MoLFormer_XL,0.7530,0.8307,0.7764,0.8503,0.1561,0.4846
+3a4,SMILES_Only_JointRegCls,MT_MoLFormer_XL,0.7762,0.8582,0.7912,0.8714,0.1461,0.4484
