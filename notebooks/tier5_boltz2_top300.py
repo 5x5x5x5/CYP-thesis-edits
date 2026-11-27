@@ -178,6 +178,14 @@ def extract_record(pred_dir: Path, name: str, row: pd.Series) -> dict:
     return rec
 
 
+def _has_cueq() -> bool:
+    try:
+        import cuequivariance_torch  # noqa: F401
+        return True
+    except ImportError:
+        return False
+
+
 def run_boltz_batch(
     yaml_dir: Path, out_dir: Path, use_msa_server: bool, sampling_steps: int = 50
 ) -> None:
@@ -199,6 +207,8 @@ def run_boltz_batch(
         "1",
         "--override",
     ]
+    if not _has_cueq():
+        cmd.append("--no_kernels")
     if use_msa_server:
         cmd.append("--use_msa_server")
     print(f"Running: {' '.join(cmd)}", flush=True)
@@ -241,17 +251,34 @@ def main() -> None:
         first_name = f"{iso}_{int(first['SID'])}"
         write_boltz_yaml(msa_cache_dir / f"{first_name}.yaml", iso, first["CanonicalSMILES"], msa_path=None)
 
-        msa_files = list(msa_out_dir.rglob("*.a3m")) if msa_out_dir.exists() else []
-        if not msa_files:
+        msa_dir = msa_out_dir / f"boltz_results_{msa_cache_dir.name}" / "msa"
+        msa_csvs = list(msa_dir.glob("*.csv")) if msa_dir.exists() else []
+        if not msa_csvs:
             run_boltz_batch(msa_cache_dir, msa_out_dir, use_msa_server=True)
-            msa_files = list(msa_out_dir.rglob("*.a3m"))
+            msa_csvs = list(msa_dir.glob("*.csv")) if msa_dir.exists() else []
 
-        msa_path = msa_files[0] if msa_files else None
-        print(f"  [{iso}] Cached MSA: {msa_path}", flush=True)
+        if msa_csvs:
+            msa_path = msa_csvs[0]
+        else:
+            raw_a3ms = list(msa_out_dir.rglob("*.a3m")) if msa_out_dir.exists() else []
+            if raw_a3ms:
+                clean_a3m = args.work_dir / f"clean_{iso}.a3m"
+                clean_a3m.write_bytes(raw_a3ms[0].read_bytes().replace(b"\x00", b""))
+                msa_path = clean_a3m
+            else:
+                msa_path = None
+        print(f"  [{iso}] Cached clean MSA: {msa_path}", flush=True)
 
         if (iso, int(first["SID"])) not in done_keys:
             pdir = msa_out_dir / f"boltz_results_{msa_cache_dir.name}" / "predictions" / first_name
             rec = extract_record(pdir, first_name, first)
+            print(
+                f"  [{iso}] Seed check -> aff_prob={rec['affinity_prob']:.4f}, "
+                f"aff_val={rec['affinity_val']:.4f}, lig_iptm={rec['ligand_iptm']:.4f}, "
+                f"d_fe_het={rec['d_fe_het']:.2f}A",
+                flush=True,
+            )
+            assert np.isfinite(rec["affinity_prob"]), f"Seed complex failed for {iso}!"
             all_recs.append(rec)
             done_keys.add((iso, int(first["SID"])))
             pd.DataFrame(all_recs).to_csv(args.out_csv, index=False)
